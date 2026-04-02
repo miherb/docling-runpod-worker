@@ -78,7 +78,6 @@ if __name__ == "__main__":
     if MODE_TO_RUN == "serverless":
         import runpod
 
-        _warmup()
         runpod.serverless.start({"handler": handler})
     else:
         _run_local_test()
