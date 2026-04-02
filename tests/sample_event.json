@@ -1,0 +1,11 @@
+{
+  "input": {
+    "job_id": "sample-job",
+    "pdf_url": "https://example.com/report.pdf",
+    "callback_url": "https://example.com/callback",
+    "callback_secret": "replace-me",
+    "metadata": {
+      "source": "manual-test"
+    }
+  }
+}
