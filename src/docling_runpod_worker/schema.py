@@ -10,6 +10,9 @@ class JobRequest:
     pdf_url: str
     callback_url: str | None = None
     callback_secret: str | None = None
+    document_id: str | None = None
+    analysis_run_id: str | None = None
+    file_name: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
@@ -68,9 +71,12 @@ def parse_request(event: dict[str, Any]) -> JobRequest:
         raise ValueError("input must be an object")
 
     job_id = str(raw.get("job_id", "")).strip()
-    pdf_url = str(raw.get("pdf_url", "")).strip()
+    pdf_url = str(raw.get("pdf_url", "") or raw.get("source_url", "")).strip()
     callback_url = str(raw.get("callback_url", "")).strip() or None
     callback_secret = str(raw.get("callback_secret", "")).strip() or None
+    document_id = str(raw.get("document_id", "")).strip() or None
+    analysis_run_id = str(raw.get("analysis_run_id", "")).strip() or None
+    file_name = str(raw.get("file_name", "")).strip() or None
     metadata = raw.get("metadata") or {}
 
     if not job_id:
@@ -85,5 +91,8 @@ def parse_request(event: dict[str, Any]) -> JobRequest:
         pdf_url=pdf_url,
         callback_url=callback_url,
         callback_secret=callback_secret,
+        document_id=document_id,
+        analysis_run_id=analysis_run_id,
+        file_name=file_name,
         metadata=metadata,
     )

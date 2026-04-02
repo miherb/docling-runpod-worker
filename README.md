@@ -29,6 +29,22 @@ Input payload:
 }
 ```
 
+Compatibility aliases also accepted:
+
+```json
+{
+  "input": {
+    "job_id": "job-123",
+    "source_url": "https://example.com/report.pdf",
+    "document_id": "doc-1",
+    "analysis_run_id": "run-1",
+    "file_name": "report.pdf",
+    "callback_url": "https://example.com/api/callback",
+    "callback_secret": "shared-secret"
+  }
+}
+```
+
 Worker result:
 
 ```json
@@ -62,6 +78,12 @@ On failure:
 ```
 
 If `callback_url` is provided, the worker POSTs the same payload there after completion.
+
+Callback compatibility:
+
+- sends both `Authorization: Bearer <secret>` and `x-callback-secret: <secret>` when `callback_secret` is provided
+- success callbacks include both the generic `result` object and flattened fields such as `extracted_text`, `page_count`, `word_count`, and `extractor_version`
+- callback `status` is normalized to `succeeded` / `failed` for orchestration systems that use terminal job states
 
 ## Layout
 

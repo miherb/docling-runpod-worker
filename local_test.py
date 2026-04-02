@@ -17,12 +17,14 @@ def main() -> None:
     parser.add_argument("--job-id", default="local-test", help="Job identifier")
     parser.add_argument("--callback-url", help="Optional callback URL")
     parser.add_argument("--callback-secret", help="Optional callback bearer secret")
+    parser.add_argument("--source-url", help="Alternate alias for --pdf-url")
     args = parser.parse_args()
 
     event = {
         "input": {
             "job_id": args.job_id,
             "pdf_url": args.pdf_url,
+            "source_url": args.source_url,
             "callback_url": args.callback_url,
             "callback_secret": args.callback_secret,
         }

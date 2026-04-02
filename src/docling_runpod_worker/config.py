@@ -12,6 +12,10 @@ def _int_env(name: str, default: int) -> int:
         return default
 
 
+def _str_env(name: str, default: str) -> str:
+    return os.getenv(name, default).strip() or default
+
+
 @dataclass(frozen=True)
 class WorkerConfig:
     docling_num_threads: int = _int_env("DOCLING_NUM_THREADS", 8)
@@ -21,6 +25,7 @@ class WorkerConfig:
     queue_size: int = _int_env("DOCLING_QUEUE_SIZE", 256)
     pdf_download_timeout_seconds: int = _int_env("PDF_DOWNLOAD_TIMEOUT_SECONDS", 120)
     callback_timeout_seconds: int = _int_env("CALLBACK_TIMEOUT_SECONDS", 20)
+    extractor_version: str = _str_env("EXTRACTOR_VERSION", "docling-runpod-worker/0.1")
 
 
 CONFIG = WorkerConfig()
