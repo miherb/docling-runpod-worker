@@ -9,8 +9,7 @@ WORKDIR /app
 
 COPY requirements.txt /app/requirements.txt
 
-RUN pip install --upgrade pip && \
-    pip install -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY handler.py /app/handler.py
 COPY local_test.py /app/local_test.py
