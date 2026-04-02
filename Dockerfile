@@ -15,4 +15,15 @@ COPY handler.py /app/handler.py
 COPY local_test.py /app/local_test.py
 COPY src /app/src
 
+RUN python -c "\
+from docling.datamodel.pipeline_options import ThreadedPdfPipelineOptions; \
+from docling.datamodel.base_models import InputFormat; \
+from docling.document_converter import DocumentConverter, PdfFormatOption; \
+from docling.pipeline.threaded_standard_pdf_pipeline import ThreadedStandardPdfPipeline; \
+from docling.backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend; \
+opts = ThreadedPdfPipelineOptions(do_ocr=False, do_table_structure=True, pdf_backend=DoclingParseV4DocumentBackend); \
+converter = DocumentConverter(format_options={InputFormat.PDF: PdfFormatOption(pipeline_cls=ThreadedStandardPdfPipeline, pipeline_options=opts)}); \
+print('Models downloaded and cached successfully') \
+"
+
 CMD ["python", "-u", "handler.py"]

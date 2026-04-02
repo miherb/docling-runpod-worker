@@ -80,11 +80,22 @@ def _run_local_test() -> None:
     print(json.dumps(handler(event), indent=2))
 
 
+def _warmup() -> None:
+    print(json.dumps({"event": "warmup_start"}), flush=True)
+    try:
+        from docling_runpod_worker.extractor import get_converter
+        get_converter()
+        print(json.dumps({"event": "warmup_done"}), flush=True)
+    except Exception as exc:
+        print(json.dumps({"event": "warmup_failed", "error": str(exc)}), flush=True)
+
+
 if __name__ == "__main__":
-    print(json.dumps({"event": "worker_starting", "mode": MODE_TO_RUN}))
+    print(json.dumps({"event": "worker_starting", "mode": MODE_TO_RUN}), flush=True)
     if MODE_TO_RUN == "serverless":
         import runpod
 
+        _warmup()
         runpod.serverless.start({"handler": handler})
     else:
         _run_local_test()
