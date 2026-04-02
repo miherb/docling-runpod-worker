@@ -9,13 +9,6 @@ from functools import lru_cache
 from pathlib import Path
 
 import requests
-import torch
-from docling.backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
-from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
-from docling.datamodel.base_models import InputFormat
-from docling.datamodel.pipeline_options import ThreadedPdfPipelineOptions
-from docling.document_converter import DocumentConverter, PdfFormatOption
-from docling.pipeline.threaded_standard_pdf_pipeline import ThreadedStandardPdfPipeline
 
 from docling_runpod_worker.config import CONFIG
 from docling_runpod_worker.schema import ExtractionResult, JobRequest
@@ -23,6 +16,8 @@ from docling_runpod_worker.staging import stage_doc_docling
 
 
 def clear_gpu_memory() -> None:
+    import torch
+
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
     gc.collect()
@@ -72,6 +67,13 @@ def infer_title(markdown: str) -> str | None:
 
 @lru_cache(maxsize=1)
 def get_converter() -> DocumentConverter:
+    from docling.backend.docling_parse_v4_backend import DoclingParseV4DocumentBackend
+    from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+    from docling.datamodel.base_models import InputFormat
+    from docling.datamodel.pipeline_options import ThreadedPdfPipelineOptions
+    from docling.document_converter import DocumentConverter, PdfFormatOption
+    from docling.pipeline.threaded_standard_pdf_pipeline import ThreadedStandardPdfPipeline
+
     os.environ.setdefault("OMP_NUM_THREADS", str(CONFIG.omp_num_threads))
 
     pipeline_options = ThreadedPdfPipelineOptions(

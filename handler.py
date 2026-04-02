@@ -10,7 +10,6 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from docling_runpod_worker.callbacks import post_callback
-from docling_runpod_worker.extractor import extract_from_job
 from docling_runpod_worker.schema import ErrorInfo, JobResponse, parse_request
 
 
@@ -22,6 +21,8 @@ def _serialize(response: JobResponse) -> dict:
 
 
 async def _handle_event(event: dict) -> dict:
+    from docling_runpod_worker.extractor import extract_from_job
+
     request = parse_request(event)
 
     try:
@@ -80,6 +81,7 @@ def _run_local_test() -> None:
 
 
 if __name__ == "__main__":
+    print(json.dumps({"event": "worker_starting", "mode": MODE_TO_RUN}))
     if MODE_TO_RUN == "serverless":
         import runpod
 
